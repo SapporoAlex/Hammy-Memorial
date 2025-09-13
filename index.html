@@ -44,53 +44,71 @@
 
 
 <script>
-const totalFiles = 97; // number of Hammy files
+const totalFiles = 97;
 const mediaContainer = document.getElementById("media");
 
 const images = [];
-const videos = [];
+const videoPool = {}; // only keep a few videos preloaded
 
-// Preload all media
+// Preload all images
 for (let i = 1; i <= totalFiles; i++) {
     const img = new Image();
     img.src = `hammy/hammy${i}.jpg`;
     images.push(img);
+}
 
+// Helper: preload a video
+function preloadVideo(index) {
+    if (videoPool[index]) return; // already preloaded
     const video = document.createElement("video");
-    video.src = `hammy/hammy${i}.mp4`;
-    video.preload = "auto"; // preload video
-    videos.push(video);
+    video.src = `hammy/hammy${index + 1}.mp4`;
+    video.preload = "auto";
+    videoPool[index] = video;
+}
+
+// Preload first 3 videos
+for (let i = 0; i < Math.min(3, totalFiles); i++) {
+    preloadVideo(i);
 }
 
 function showRandomMedia() {
-
+    mediaContainer.innerHTML = "";
 
     const randomIndex = Math.floor(Math.random() * totalFiles);
 
-    // Try to use preloaded image first
+    // Show image first if it exists
     const img = images[randomIndex].cloneNode();
-    
     img.onload = () => {
-        mediaContainer.innerHTML = "";
         mediaContainer.appendChild(img);
         requestAnimationFrame(() => img.classList.add("visible"));
-        setTimeout(showRandomMedia, 5000); // show 5s then next
+        setTimeout(showRandomMedia, 5000);
     };
 
     img.onerror = () => {
-        // If image failed, use preloaded video
-        const video = videos[randomIndex].cloneNode();
+        // Use preloaded video if available
+        let video;
+        if (videoPool[randomIndex]) {
+            video = videoPool[randomIndex].cloneNode();
+        } else {
+            video = document.createElement("video");
+            video.src = `hammy/hammy${randomIndex + 1}.mp4`;
+            video.preload = "auto";
+        }
+
         video.autoplay = true;
         video.controls = true;
         video.defaultMuted = true;
 
         video.onloadeddata = () => {
-            mediaContainer.innerHTML = "";
             mediaContainer.appendChild(video);
             requestAnimationFrame(() => video.classList.add("visible"));
         };
 
         video.onended = showRandomMedia;
+
+        // Preload the next two videos after this one
+        preloadVideo((randomIndex + 1) % totalFiles);
+        preloadVideo((randomIndex + 2) % totalFiles);
     };
 
     mediaContainer.appendChild(img);
