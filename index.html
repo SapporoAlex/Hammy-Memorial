@@ -63,7 +63,7 @@ for (let i = 1; i <= totalFiles; i++) {
 }
 
 function showRandomMedia() {
-    mediaContainer.innerHTML = "";
+
 
     const randomIndex = Math.floor(Math.random() * totalFiles);
 
@@ -71,6 +71,7 @@ function showRandomMedia() {
     const img = images[randomIndex].cloneNode();
     
     img.onload = () => {
+        mediaContainer.innerHTML = "";
         mediaContainer.appendChild(img);
         requestAnimationFrame(() => img.classList.add("visible"));
         setTimeout(showRandomMedia, 5000); // show 5s then next
@@ -84,6 +85,7 @@ function showRandomMedia() {
         video.defaultMuted = true;
 
         video.onloadeddata = () => {
+            mediaContainer.innerHTML = "";
             mediaContainer.appendChild(video);
             requestAnimationFrame(() => video.classList.add("visible"));
         };
