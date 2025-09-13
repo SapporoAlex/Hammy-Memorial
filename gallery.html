@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hammy Gallery</title>
+<button onclick="window.location.href='index.html'">Slideshow</button>
+<style>
+body {
+    margin: 0;
+    padding: 20px;
+    font-family: sans-serif;
+    background-color: hsl(12, 100%, 97%);
+}
+
+/* Grid container */
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+/* Each thumbnail container */
+.grid-item {
+    width: 300px;
+    height: 300px;
+    overflow: hidden;
+    border-radius: 10px;
+    cursor: pointer;
+    position: relative;
+}
+
+.grid-item img,
+.grid-item video {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain; /* ensures no warping */
+}
+
+/* Modal */
+#modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.9);
+    justify-content: center;
+    align-items: center;
+}
+
+/* Modal content scales to fit viewport */
+#modal-content img, #modal-content video {
+    max-width: 90vw;
+    max-height: 90vh;
+    width: auto;
+    height: auto;
+    border-radius: 10px;
+}
+
+#modal-close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 40px;
+    color: white;
+    cursor: pointer;
+}
+
+button {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 25px;
+    cursor: pointer;
+    border: white solid 1px;
+    background-color: rgb(255, 182, 231);
+    color: white;
+    z-index: 2;
+}
+
+@media (max-width: 900px) {
+    .grid-item {
+        width: 200px;
+        height: 200px;
+    }
+}
+
+@media (max-width: 600px) {
+    .grid-item {
+        width: 150px;
+        height: 150px;
+    }
+}
+
+@media (max-width: 400px) {
+    .grid-item {
+        width: 120px;
+        height: 120px;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="grid" id="gallery"></div>
+
+<div id="modal">
+    <span id="modal-close">&times;</span>
+    <div id="modal-content"></div>
+</div>
+
+<script>
+const gallery = document.getElementById('gallery');
+const modal = document.getElementById('modal');
+const modalContent = document.getElementById('modal-content'); // <-- add this
+const modalClose = document.getElementById('modal-close');
+
+const totalFiles = 104;
+const videoIndexes = [88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104]; // mp4 indexes
+
+for (let i = 1; i <= totalFiles; i++) {
+    let isVideo = videoIndexes.includes(i);
+    let el;
+
+    if (isVideo) {
+        el = document.createElement('video');
+        el.src = `hammy/hammy${i}.mp4`;
+        el.muted = true;
+        el.loop = true;
+        el.autoplay = true;
+    } else {
+        el = document.createElement('img');
+        el.src = `hammy/hammy${i}.jpg`;
+    }
+
+    el.classList.add('grid-item');
+    gallery.appendChild(el);
+
+    el.addEventListener('click', () => {
+        openModal(el.src, isVideo ? 'video' : 'image');
+    });
+}
+
+function openModal(src, type) {
+    modalContent.innerHTML = '';
+    if (type === 'image') {
+        const img = document.createElement('img');
+        img.src = src;
+        modalContent.appendChild(img);
+    } else {
+        const video = document.createElement('video');
+        video.src = src;
+        video.autoplay = true;
+        video.controls = true;
+        modalContent.appendChild(video);
+    }
+    modal.style.display = 'flex';
+}
+
+modalClose.onclick = () => {
+    modal.style.display = 'none';
+    modalContent.innerHTML = '';
+}
+
+modal.onclick = (e) => {
+    if (e.target === modal) {
+        modal.style.display = 'none';
+        modalContent.innerHTML = '';
+    }
+}
+</script>
+
+</body>
+</
