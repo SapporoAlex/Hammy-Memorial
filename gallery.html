@@ -4,13 +4,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="UTF-8">
 <title>Hammy Gallery</title>
-<button onclick="window.location.href='index.html'">Slideshow</button>
 <style>
 body {
     margin: 0;
     padding: 20px;
     font-family: sans-serif;
     background-color: hsl(12, 100%, 97%);
+}
+
+/* Slideshow button */
+button {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 25px;
+    cursor: pointer;
+    border: white solid 1px;
+    background-color: rgb(255, 182, 231);
+    color: white;
+    z-index: 2;
 }
 
 /* Grid container */
@@ -21,23 +35,27 @@ body {
     justify-content: center;
 }
 
-/* Each thumbnail container */
+/* Each thumbnail box */
 .grid-item {
     width: 300px;
     height: 300px;
-    overflow: hidden;
     border-radius: 10px;
     cursor: pointer;
     position: relative;
+    overflow: hidden;
+    background: #000; /* adds black bars where needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
+/* Media inside thumbnail */
 .grid-item img,
 .grid-item video {
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: auto;
-    object-fit: contain; /* ensures no warping */
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* fills square, crops edges if needed */
+    display: block;
 }
 
 /* Modal */
@@ -53,11 +71,10 @@ body {
 }
 
 /* Modal content scales to fit viewport */
-#modal-content img, #modal-content video {
+#modal-content img,
+#modal-content video {
     max-width: 90vw;
     max-height: 90vh;
-    width: auto;
-    height: auto;
     border-radius: 10px;
 }
 
@@ -70,46 +87,21 @@ body {
     cursor: pointer;
 }
 
-    button {
-        position: fixed;
-        top: 10px;
-        left: 10px;
-        padding: 10px 20px;
-        font-size: 18px;
-        border-radius: 25px;
-        cursor: pointer;
-        border: white solid 1px;
-        background-color: rgb(255, 182, 231);
-        color: white;
-        z-index: 2;
-    }
-
+/* Responsive sizes */
 @media (max-width: 900px) {
-    .grid-item {
-        width: 200px;
-        height: 200px;
-    }
-
+    .grid-item { width: 200px; height: 200px; }
 }
-
 @media (max-width: 600px) {
-    .grid-item {
-        width: 150px;
-        height: 150px;
-    }
-
+    .grid-item { width: 150px; height: 150px; }
 }
-
 @media (max-width: 400px) {
-    .grid-item {
-        width: 120px;
-        height: 120px;
-    }
-
+    .grid-item { width: 120px; height: 120px; }
 }
 </style>
 </head>
 <body>
+
+<button onclick="window.location.href='index.html'">Slideshow</button>
 
 <div class="grid" id="gallery"></div>
 
@@ -121,7 +113,7 @@ body {
 <script>
 const gallery = document.getElementById('gallery');
 const modal = document.getElementById('modal');
-const modalContent = document.getElementById('modal-content'); // <-- add this
+const modalContent = document.getElementById('modal-content');
 const modalClose = document.getElementById('modal-close');
 
 const totalFiles = 104;
@@ -129,8 +121,12 @@ const videoIndexes = [88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104]; 
 
 for (let i = 1; i <= totalFiles; i++) {
     let isVideo = videoIndexes.includes(i);
-    let el;
 
+    // wrapper box
+    const wrapper = document.createElement('div');
+    wrapper.classList.add('grid-item');
+
+    let el;
     if (isVideo) {
         el = document.createElement('video');
         el.src = `hammy/hammy${i}.mp4`;
@@ -142,10 +138,10 @@ for (let i = 1; i <= totalFiles; i++) {
         el.src = `hammy/hammy${i}.jpg`;
     }
 
-    el.classList.add('grid-item');
-    gallery.appendChild(el);
+    wrapper.appendChild(el);
+    gallery.appendChild(wrapper);
 
-    el.addEventListener('click', () => {
+    wrapper.addEventListener('click', () => {
         openModal(el.src, isVideo ? 'video' : 'image');
     });
 }
@@ -180,4 +176,4 @@ modal.onclick = (e) => {
 </script>
 
 </body>
-</
+</html>
