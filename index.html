@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Momo & Hammy</title>
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: hsl(12, 100%, 97%);
+        font-family: sans-serif;
+        text-align: center;
+    }
+
+    #media {
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    img, video {
+        max-width: 95vw;   /* keep inside screen width */
+        max-height: 95vh;  /* keep inside screen height */
+        width: auto;
+        height: auto;
+        border-radius: 10px;
+        opacity: 0;
+        transition: opacity 1.5s ease; /* fade-in effect */
+    }
+
+    .visible {
+        opacity: 1;
+    }
+</style>
+</head>
+<body>
+<div id="media"></div>
+
+
+<script>
+  const totalFiles = 97; // number of Hammy files
+  const mediaContainer = document.getElementById("media");
+
+  function showRandomMedia() {
+    // Clear old content
+    mediaContainer.innerHTML = "";
+
+    const randomIndex = Math.floor(Math.random() * totalFiles) + 1;
+
+    // Create image element
+    const img = document.createElement("img");
+    img.src = `hammy/hammy${randomIndex}.jpg`;
+
+    img.onload = () => {
+      mediaContainer.appendChild(img);
+      requestAnimationFrame(() => img.classList.add("visible"));
+      setTimeout(showRandomMedia, 5000); // show for 5s then change
+    };
+
+    img.onerror = () => {
+      // If JPG not found, use video
+      const video = document.createElement("video");
+      video.src = `hammy/hammy${randomIndex}.mp4`;
+      video.autoplay = true;
+      video.controls = true;
+    video.defaultMuted = true;
+
+      video.onloadeddata = () => {
+        mediaContainer.appendChild(video);
+        requestAnimationFrame(() => video.classList.add("visible"));
+      };
+
+      video.onended = showRandomMedia; // next when video finishes
+    };
+
+    mediaContainer.appendChild(img);
+  }
+
+  showRandomMedia();
+</script>
+</body>
+</html>
