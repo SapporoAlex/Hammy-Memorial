@@ -4,7 +4,7 @@
 <link rel="icon" type="image/png" href="icon.jpg" />
 <meta property="og:title" content="Momo & Hammy Gallery">
 <meta property="og:description" content="Reconnect with Hammy through photos and videos.">
-<meta property="og:image" content="hammy/hammy86.jpg">
+<meta property="og:image" content="hammy/hammy86.webp">
 <meta property="og:type" content="website">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -75,7 +75,7 @@ const videoIndexes = [88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104]
 for (let i = 1; i <= totalFiles; i++) {
     if (!videoIndexes.includes(i)) {
         const img = new Image();
-        img.src = `hammy/hammy${i}.jpg`;
+        img.src = `hammy/hammy${i}.webp`;
         images[i] = img; // store by index
     }
 }
