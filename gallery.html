@@ -82,9 +82,24 @@ button {
     position: absolute;
     top: 20px;
     right: 30px;
-    font-size: 80px;
+    font-size: 50px;
     color: white;
     cursor: pointer;
+}
+
+.youtube-container {
+    margin: 40px auto;
+    max-width: 800px;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.youtube-container iframe {
+    width: 100%;
+    height: 100%;
+    display: block;
 }
 
 /* Responsive sizes */
@@ -105,6 +120,16 @@ button {
 
 <div class="grid" id="gallery"></div>
 
+<div class="youtube-container">
+    <iframe 
+        src="https://www.youtube.com/watch?v=V1X3HyxumFI" 
+        title="Hammy"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+        allowfullscreen>
+    </iframe>
+</div>
+
 <div id="modal">
     <span id="modal-close">&times;</span>
     <div id="modal-content"></div>
@@ -116,8 +141,8 @@ const modal = document.getElementById('modal');
 const modalContent = document.getElementById('modal-content');
 const modalClose = document.getElementById('modal-close');
 
-const totalFiles = 104;
-const videoIndexes = [88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104]; // mp4 indexes
+const totalFiles = 87;
+// const videoIndexes = [88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104];
 
 for (let i = 1; i <= totalFiles; i++) {
     let isVideo = videoIndexes.includes(i);
